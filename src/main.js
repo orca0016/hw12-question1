@@ -9,6 +9,7 @@ const animationLoading = document.getElementById("animation-loading");
 const apiWeatherKey = "6e6b93dbd04be660a25e18c92f760578";
 let data = [];
 
+// fetch country data from api
 async function fetchCountry() {
   try {
     handleLoading("show");
@@ -20,8 +21,9 @@ async function fetchCountry() {
     if (!fetchData.ok) {
       throw new Error("something went wrong!");
     }
-    const bodyData = await fetchData.json();
-    data = bodyData;
+    data = await fetchData.json();
+
+    // sort asc data country
     data.sort((a, b) => {
       const nameA = a.name.common.toUpperCase();
       const nameB = b.name.common.toUpperCase();
@@ -29,6 +31,7 @@ async function fetchCountry() {
       if (nameA > nameB) return 1;
       return 0;
     });
+
     renderCountry(data);
   } catch (error) {
     console.log(error.message);
@@ -36,6 +39,7 @@ async function fetchCountry() {
 }
 fetchCountry();
 
+// fetch data weather base on location from api
 async function fetchWeatherData(lat, lon) {
   const urlWeather = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiWeatherKey}`;
   try {
@@ -45,13 +49,15 @@ async function fetchWeatherData(lat, lon) {
     });
     if (!weatherData.ok) throw new Error("Something went wrong !");
     const weather = await weatherData.json();
-    detailInformation.innerHTML = detailWeatherInformation(weather);
+    // show incoming data weather to the user
     overallInformation.innerHTML = overallWeatherInformation(weather);
-    console.log(weather);
+    detailInformation.innerHTML = detailWeatherInformation(weather);
   } catch (error) {
     console.log(error.message);
   }
 }
+
+// render country in a list button of input search
 const renderCountry = (country) => {
   listCountry.innerHTML = "";
   if (country.length === 0) {
@@ -63,8 +69,7 @@ const renderCountry = (country) => {
       p.addEventListener("click", () => {
         fetchWeatherData(el.capitalInfo.latlng[0], el.capitalInfo.latlng[1]);
         searchInput.value = "";
-        listCountry.classList.add("h-[0px]");
-        listCountry.classList.remove("h-[100px]");
+        controlListCountry("hidden");
       });
       p.className = "cursor-pointer hover:bg-[#8195A7] px-10";
       p.innerText = el.name.common;
@@ -73,13 +78,12 @@ const renderCountry = (country) => {
   }
 };
 
+// when value of  input change filter the country data to the exact match words
 searchInput.addEventListener("input", (e) => {
   if (!e.target.value) {
-    listCountry.classList.add("h-[0px]");
-    listCountry.classList.remove("h-[100px]");
+    controlListCountry("hidden");
   } else {
-    listCountry.classList.add("h-[100px]");
-    listCountry.classList.remove("h-[0px]");
+    controlListCountry("show");
   }
 
   const tempData = data.filter((item) =>
@@ -88,6 +92,7 @@ searchInput.addEventListener("input", (e) => {
   renderCountry(tempData);
 });
 
+// fetch and show data from  api weather when form submit
 searchCountry.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -100,10 +105,21 @@ searchCountry.addEventListener("submit", (e) => {
       tempData.capitalInfo.latlng[1]
     );
     searchInput.value = "";
+    controlListCountry("hidden");
+  }
+});
+
+// open and close section of show list country
+const controlListCountry = (operate) => {
+  if (operate === "show") {
+    listCountry.classList.add("h-[100px]");
+    listCountry.classList.remove("h-[0px]");
+  } else {
     listCountry.classList.add("h-[0px]");
     listCountry.classList.remove("h-[100px]");
   }
-});
+};
+
 const detailWeatherInformation = (weatherCity) => {
   return `<div class="flex gap-6 flex-col pb-20 border-b border-white/50">
             <div class="detail flex justify-between font-light">
@@ -174,20 +190,16 @@ const overallWeatherInformation = (weatherCity) => {
         </div>`;
 };
 
+
+// handle loading operation 
 function handleLoading(operation) {
   if (operation === "show") {
     animationLoading.classList.remove("hidden");
     animationLoading.classList.add("flex");
     animationLoading.classList.add("show-loading");
-    console.log("show");
   } else {
-    console.log("off");
-    // setTimeout(()=>{
-    // },2000)
     animationLoading.classList.add("hidden");
     animationLoading.classList.remove("flex");
     animationLoading.classList.remove("show-loading");
-
-    // animationLoading.classList.add("hidden");
   }
 }
