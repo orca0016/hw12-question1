@@ -1,16 +1,161 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="/dist/styles.css" rel="stylesheet">
+    <link href="/dist/styles.css" rel="stylesheet" />
     <title>weather app</title>
   </head>
-  <body>
-    <h1 class="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+  <body
+    class="select-none --font-display w-full min-h-[100vh] lg:bg-[url(/images/bg-weather.png)] sm:bg-[url(/images/Home-Tablet.png)] bg-[url(/images/Home-Phone.png)] bg-center bg-no-repeat bg-cover text-white grid grid-cols-1 lg:grid-cols-2"
+  >
+    <div
+      id="animation-loading"
+      class="flex fixed show-loading w-full h-[100vh] bg-amber-50/0 backdrop-blur-lg z-100"
+    >
+      <img src="/images/animation.gif" alt="loading gif" class="w-20" />
+    </div>
+    <!-- ----------------------left section ---------------------- -->
+    <div
+      class="left lg:pl-20 lg:py-12 flex flex-col justify-between h-full sm:px-10 sm:py-10 sm:gap-50 gap-30 p-6"
+    >
+      <div class="lg:block hidden"></div>
+      <div class="flex justify-between lg:fixed top-10 right-30 left-10 z-10">
+        <img src="/images/logo.svg" class="sm:w-20 w-10" alt="the logo" />
+        <!-- ----------------------search input ---------------------- -->
+        <form
+          id="search-country"
+          class="lg:w-[33%] sm:w-[70%]"
+          autocomplete="off"
+        >
+          <div
+            class="border-b-1 border-white/70 flex justify-between items-center gap-3 py-2 pr-3 relative"
+          >
+            <input
+              type="text"
+              name="search"
+              id="search-input"
+              placeholder="Search Location..."
+              class="bg-none border-0 outline-none w-[90%] placeholder:text-[1.3rem] placeholder:font-light"
+            />
+            <button type="submit">
+              <img src="/images/search.svg" class="w-6" alt="search icon" />
+            </button>
+            <div
+              id="list-country"
+              class="absolute top-[110%] w-full h-[0] backdrop-blur-lg bg-[#334D51]/40 z-20 rounded-sm transition overflow-y-scroll [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar]:rounded-md [&::-webkit-scrollbar-track]:bg-gray-100/0 [&::-webkit-scrollbar-thumb]:bg-gray-300"
+            ></div>
+          </div>
+        </form>
+      </div>
+
+      <!-- ----------------------overall result search ---------------------- -->
+      <div id="overall-information">
+        <div class="flex lg:gap-6 sm:gap-3 gap-3 flex-wrap items-end max-h-50">
+          <span class="lg:text-[143px]/32 sm:text-[120px]/32 text-[64px]/20"
+            >16°</span
+          >
+          <div class="flex flex-col">
+            <h2
+              id="city"
+              class="lg:text-5xl sm:text-4xl text-3xl font-semibold"
+            >
+              London
+            </h2>
+            <i
+              class="lg:text-1xl sm:text-[0.7rem] text-[0.5rem] max-sm:text-gray-50/80"
+              >06:09 - Monday, 9 Sep ‘23</i
+            >
+          </div>
+          <img
+            src="/images/Cloudy.svg"
+            class="lg:h-20 sm:h-10 h-8"
+            alt="cloud icon"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- ----------------------right section ---------------------- -->
+    <div class="right flex justify-end">
+      <!-- ----------------------blur background div ---------------------- -->
+      <div
+        class="lg:w-[80%] w-full h-full backdrop-blur-lg border-white/14 lg:border-l-4 border-t-4 lg:border-t-0 lg:px-5 lg:py-10 lg:pr-30 sm:px-40 sm:pt-20 sm:pb-8 shadow-xl p-5"
+      >
+        <!-- ----------------------search input ---------------------- -->
+        <!-- <form id="search-country" class="lg:block hidden ">
+          <div
+            class="border-b-1 border-white/70 flex justify-between items-center gap-3 py-2 pr-3 relative"
+          >
+            <input
+              type="text"
+              name="search"
+              id="search-input"
+              placeholder="Search Location..."
+              class="bg-none border-0 outline-none w-[90%] placeholder:text-[1.3rem] placeholder:font-light"
+            />
+            <button type="submit">
+              <img src="/images/search.svg" class="w-6" alt="search icon" />
+            </button>
+            <div
+              id="list-country"
+              class="absolute top-[110%] w-full h-[0] backdrop-blur-lg bg-[#334D51] rounded-sm  transition overflow-y-scroll [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar]:rounded-md [&::-webkit-scrollbar-track]:bg-gray-100/0 [&::-webkit-scrollbar-thumb]:bg-gray-300"
+            ></div>
+          </div>
+        </form> -->
+        <!-- ----------------------detail weather ---------------------- -->
+        <h2
+          class="font-light my-10 text-[1.1rem] lg:text-left text-center lg:mt-20"
+        >
+          Weather Details...
+        </h2>
+        <div id="detail-information">
+          <div class="flex gap-6 flex-col pb-20 border-b border-white/50">
+            <div class="detail flex justify-between font-light">
+              <span class="text-[1.3rem] font-extralight uppercase"
+                >thunderstorm with light drizzle</span
+              >
+            </div>
+            <div class="detail flex justify-between font-light">
+              <span>Temp max</span>
+              <div class="flex gap-6">
+                <span>19°</span>
+                <img src="/images/temp-worm.png" alt="temp worm" />
+              </div>
+            </div>
+            <div class="detail flex justify-between font-light">
+              <span>Temp min</span>
+              <div class="flex gap-6">
+                <span>15°</span>
+                <img src="/images/temp-cold.png" alt="temp cold" />
+              </div>
+            </div>
+            <div class="detail flex justify-between font-light">
+              <span>Humadity</span>
+              <div class="flex gap-6">
+                <span>58%</span>
+                <img src="/images/watter.png" alt="water" />
+              </div>
+            </div>
+            <div class="detail flex justify-between font-light">
+              <span>Cloudy</span>
+              <div class="flex gap-5">
+                <span>86%</span>
+                <img src="/images/cloud.png" alt="cloud" />
+              </div>
+            </div>
+            <div class="detail flex justify-between font-light">
+              <span>Wind</span>
+              <div class="flex gap-4">
+                <span>5km/h</span>
+                <img src="/images/wind.png" alt="wind" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
